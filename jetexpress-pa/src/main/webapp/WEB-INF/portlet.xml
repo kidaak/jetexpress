@@ -1,46 +1,131 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Licensed to the Apache Software Foundation (ASF) under one
-  or more contributor license agreements.  See the NOTICE file
-  distributed with this work for additional information
-  regarding copyright ownership.  The ASF licenses this file
-  to you under the Apache License, Version 2.0 (the
-  "License"); you may not use this file except in compliance
-  with the License.  You may obtain a copy of the License at
-  
-   http://www.apache.org/licenses/LICENSE-2.0
-  
-  Unless required by applicable law or agreed to in writing,
-  software distributed under the License is distributed on an
-  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  KIND, either express or implied.  See the License for the
-  specific language governing permissions and limitations
-  under the License.
--->
-<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" 
-              version="2.0" 
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-              xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd">
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" version="2.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd
+	http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd">
 
-    <portlet>
-        <description>This is a test.</description>
-        <portlet-name>myportlet</portlet-name>
-        <display-name>MyPortlet Portlet</display-name>
-        <portlet-class>org.apache.portals.tutorials.MyPortlet</portlet-class>
-        <init-param>
-            <name>ViewPage</name>
-            <value>/WEB-INF/normal.jsp</value>
-        </init-param>
-        <supports>
-            <mime-type>text/html</mime-type>
-            <portlet-mode>VIEW</portlet-mode>
-        </supports>
-        <supported-locale>en</supported-locale>
-        <portlet-info>
-            <title>My Portlet</title>
-            <short-title>My Portlet</short-title>
-            <keywords>test</keywords>
-        </portlet-info>
-    </portlet>
-
+	<portlet>
+		<description>This is a test.</description>
+		<portlet-name>myportlet</portlet-name>
+		<display-name>MyPortlet Portlet</display-name>
+		<portlet-class>org.apache.portals.tutorials.MyPortlet</portlet-class>
+		<init-param>
+			<name>ViewPage</name>
+			<value>/WEB-INF/normal.jsp</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>VIEW</portlet-mode>
+		</supports>
+		<supported-locale>en</supported-locale>
+		<portlet-info>
+			<title>My Portlet</title>
+			<short-title>My Portlet</short-title>
+			<keywords>test</keywords>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<description>Bonjour Monde Portlet</description>
+		<portlet-name>BonjourMonde</portlet-name>
+		<display-name>Bonjour Monde</display-name>
+		<portlet-class>org.apache.portals.tutorials.BonjourMondePortlet</portlet-class>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>VIEW</portlet-mode>
+			<portlet-mode>EDIT</portlet-mode>
+			<portlet-mode>HELP</portlet-mode>
+		</supports>
+		<supported-locale>en</supported-locale>
+		<portlet-info>
+			<title>Bonjour Monde</title>
+			<short-title>Bonjour</short-title>
+			<keywords>tutorial,bonjour,hello</keywords>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<description>The 2nd Tutorial with JSP</description>
+		<portlet-name>TutorialPortlet2</portlet-name>
+		<display-name>Tutorial Portlet 2</display-name>
+		<portlet-class>org.apache.portals.bridges.common.GenericServletPortlet</portlet-class>
+		<init-param>
+			<name>ViewPage</name>
+			<value>/WEB-INF/view/tutorial.jsp</value>
+		</init-param>
+		<init-param>
+			<name>EditPage</name>
+			<value>/WEB-INF/view/tutorial.jsp</value>
+		</init-param>
+		<init-param>
+			<name>HelpPage</name>
+			<value>/WEB-INF/view/tutorial.jsp</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>VIEW</portlet-mode>
+			<portlet-mode>EDIT</portlet-mode>
+			<portlet-mode>HELP</portlet-mode>
+		</supports>
+		<supported-locale>en</supported-locale>
+		<portlet-info>
+			<title>Tutorial Portlet</title>
+			<short-title>tutorial</short-title>
+			<keywords>tutorial,hello,JSP,taglib</keywords>
+		</portlet-info>
+		<portlet-preferences>
+			<preference>
+				<name>test</name>
+				<value>hello</value>
+			</preference>
+		</portlet-preferences>
+	</portlet>
+	<portlet id="ServicesTutorialPortlet">
+		<description>Tutorial for using Jetspeed Services, such as PortalAdministration, PageManager, Registry.</description>
+		<portlet-name>ServicesTutorialPortlet</portlet-name>
+		<display-name>Jetspeed Services Tutorial Portlet</display-name>
+		<portlet-class>org.apache.portals.tutorials.JetspeedServicesPortlet</portlet-class>
+		<init-param>
+			<description>This parameter sets the template used in view mode.</description>
+			<name>ViewPage</name>
+			<value>/WEB-INF/view/services-tutorial.jsp</value>
+		</init-param>
+		<init-param>
+			<description>Comma-separated list of roles to create via Role Manager</description>
+			<name>roles</name>
+			<value>role1,role2,role3</value>
+		</init-param>
+		<init-param>
+			<description>Comma-separated list of groups to create via Group Manager</description>
+			<name>groups</name>
+			<value>group1,group2,group3</value>
+		</init-param>
+		<init-param>
+			<description>Comma-separated list of Users to create and Register via PortalAdminstration service</description>
+			<name>users</name>
+			<value>user1,user2,user3</value>
+		</init-param>
+		<init-param>
+			<description>Comma-separated list of roles to assign to a new user</description>
+			<name>registration-roles</name>
+			<value>user,role1,role2</value>
+		</init-param>
+		<init-param>
+			<description>Comma-separated list of groups to assign to a new user</description>
+			<name>registration-groups</name>
+			<value>group1,group2</value>
+		</init-param>
+		<init-param>
+			<name>portlet-icon</name>
+			<value>start-here.png</value>
+		</init-param>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>VIEW</portlet-mode>
+		</supports>
+		<supported-locale>en</supported-locale>
+		<portlet-info>
+			<title>Services Tutorial</title>
+			<short-title>Services</short-title>
+			<keywords>tutorial,services,jetspeed-services</keywords>
+		</portlet-info>
+	</portlet>
 </portlet-app>
