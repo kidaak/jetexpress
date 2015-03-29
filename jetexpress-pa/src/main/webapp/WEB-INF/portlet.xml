@@ -127,5 +127,6 @@
 			<short-title>Services</short-title>
 			<keywords>tutorial,services,jetspeed-services</keywords>
 		</portlet-info>
+		<expiration-cache>0</expiration-cache>
 	</portlet>
 </portlet-app>

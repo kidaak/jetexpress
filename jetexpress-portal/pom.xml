@@ -8,7 +8,7 @@
 	</prerequisites>
 
 	<artifactId>jetexpress-portal</artifactId>
-	<name>jetexpress portal</name>
+	<name>jetexpress portal(jetexpress-portal)</name>
 	<parent>
 		<groupId>org.apache.portals.tutorials</groupId>
 		<artifactId>jetexpress</artifactId>

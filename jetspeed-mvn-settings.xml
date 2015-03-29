@@ -50,7 +50,6 @@
       <id>jetspeed-mvn-settings</id>
       <activation>
         <activeByDefault>true</activeByDefault>
-        
       </activation>
       <properties>
         
@@ -77,15 +76,15 @@
 <!--         <org.apache.jetspeed.production.database.user></org.apache.jetspeed.production.database.user> -->
 <!--         <org.apache.jetspeed.production.database.password></org.apache.jetspeed.production.database.password> -->
 
-
-			<org.apache.jetspeed.production.jdbc.driver.groupId>postgresql</org.apache.jetspeed.production.jdbc.driver.groupId>
-			<org.apache.jetspeed.production.jdbc.driver.artifactId>postgresql</org.apache.jetspeed.production.jdbc.driver.artifactId>
-			<org.apache.jetspeed.production.jdbc.driver.version>8.3-603.jdbc3</org.apache.jetspeed.production.jdbc.driver.version>
-			<org.apache.jetspeed.production.database.default.name>postgresql</org.apache.jetspeed.production.database.default.name>
-			<org.apache.jetspeed.production.database.url>jdbc:postgresql://localhost:5433/jetspeed2</org.apache.jetspeed.production.database.url>
-			<org.apache.jetspeed.production.database.driver>org.postgresql.Driver</org.apache.jetspeed.production.database.driver>
-			<org.apache.jetspeed.production.database.user>postgres</org.apache.jetspeed.production.database.user>
-			<org.apache.jetspeed.production.database.password>password</org.apache.jetspeed.production.database.password>
+        <org.apache.jetspeed.production.jdbc.driver.groupId>org.apache.derby</org.apache.jetspeed.production.jdbc.driver.groupId>
+        <org.apache.jetspeed.production.jdbc.driver.artifactId>derby</org.apache.jetspeed.production.jdbc.driver.artifactId>
+        
+        <org.apache.jetspeed.production.jdbc.driver.version>10.3.2.1</org.apache.jetspeed.production.jdbc.driver.version>
+        <org.apache.jetspeed.production.database.default.name>derby</org.apache.jetspeed.production.database.default.name>
+        <org.apache.jetspeed.production.database.url>jdbc:derby:/tmp/jetspeed/derby/productiondb;create=true</org.apache.jetspeed.production.database.url>
+        <org.apache.jetspeed.production.database.driver>org.apache.derby.jdbc.EmbeddedDriver</org.apache.jetspeed.production.database.driver>
+        <org.apache.jetspeed.production.database.user></org.apache.jetspeed.production.database.user>
+        <org.apache.jetspeed.production.database.password></org.apache.jetspeed.production.database.password>
         
       </properties>
     </profile>

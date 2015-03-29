@@ -32,8 +32,8 @@
   </parent>
 
   <artifactId>jetspeed-mvn-pa-pom</artifactId>
-  <name>Jetspeed-2 Maven Invoker Configuration for My Portlet Application</name>
-  <description>Jetspeed-2 Maven Invoker Configuration for My Portlet Application</description>
+  <name>Jetspeed-2 Maven Invoker Configuration for petportal</name>
+  <description>Jetspeed-2 Maven Invoker Configuration for petportal</description>
 
   <packaging>pom</packaging>
 
@@ -65,10 +65,10 @@
                   <deployments>
                     <!-- portlet app -->
                     <deployment>
-                      <artifact>${project.groupId}:jetexpress-pa:war</artifact>
+                      <artifact>org.springframework.samples.petportal:jetexpress-petportal:war</artifact>
                       <infuse>true</infuse>
                       <expand>true</expand>
-                      <delete>./jetexpress-pa.war</delete>
+                      <delete>./jetexpress-petportal.war</delete>
                     </deployment>
                   </deployments>
                 </configuration>
@@ -77,12 +77,11 @@
 
             <dependencies>
               <dependency>
-                <groupId>org.apache.portals.tutorials</groupId>
-                <artifactId>jetexpress-pa</artifactId>
+                <groupId>org.springframework.samples.petportal</groupId>
+                <artifactId>jetexpress-petportal</artifactId>
                 <version>${project.version}</version>
                 <type>war</type>
               </dependency>
-
               <!-- plugin own dependencies -->
               <dependency>
                 <groupId>org.apache.portals.jetspeed-2</groupId>

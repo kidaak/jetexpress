@@ -1,8 +1,32 @@
+** Tomcat **
+conf/tomcat-users.xml
+<tomcat-users>
+	<role rolename="manager-gui"/>
+	<role rolename="manager-script"/>
+	<role rolename="manager-jmx"/>
+	<role rolename="manager-status"/>
+	<role rolename="admin-script"/>
+
+	<role rolename="admin"/>
+	<role rolename="manager"/>
+	<role rolename="tomcat"/>
+	
+	<user password="admin" roles="manager-gui,manager-script,manager-jmx,manager-status,admin-script" username="admin"/>
+	<user username="j2deployer" password="j2deployer" roles="admin,manager,tomcat"/>
+	<user name="tomcat" password="tomcat" roles="tomcat" />
+</tomcat-users>
+
 ** Building and Deploying a Custom Jetspeed Portal **	
 mvn jetspeed:mvn -Dtarget=all
 
 mvn jetspeed:mvn -Dtarget=deploy-pa
 mvn jetspeed:mvn -Dtarget=deploy-portal
+mvn jetspeed:mvn -Dtarget=deploy-petportal
+mvn jetspeed:mvn -Dtarget=deploy-all -X > deploy-all.log 
+
+mvn archetype:generate -DgroupId=org.springframework.samples.petportal -DartifactId=petportal -DarchetypeArtifactId=maven-archetype-webapp
+
+grep -rn 'words' *
 
 > Build Commands for Maven-2 and Jetspeed
 
@@ -115,3 +139,173 @@ http://www.ibm.com/developerworks/cn/opensource/os-apache-portal/
 		<td>WSRP是OASIS组织的一个规范，它定义了远程门户网站的Web服务。通过Web Service将远程内容抓取到本地，最后通过本地内容聚合引擎展示出来。</td>
 	</tr>				
 <table>	
+
+
+** Maven command **
+mvn dependency:sources
+mvn dependency:resolve -Dclassifier=javadoc
+
+** Jetspeed link **
+http://portals.apache.org/jetspeed-2/
+http://portals.apache.org/jetspeed-2/getting-started.html
+http://portals.apache.org/jetspeed-2/buildguide/jetspeed-maven-plugins.html
+https://portals.apache.org/jetspeed-2/buildguide/project-layout.html
+http://portals.apache.org/jetspeed-2/buildguide/jetspeed-archetype.html
+http://www.ibm.com/developerworks/cn/opensource/os-apache-portal/
+https://www.jcp.org/en/jsr/detail?id=168
+https://www.jcp.org/en/jsr/detail?id=286
+http://portals.apache.org/bridges/
+http://www.oopsconsultancy.com/software/xmltask/
+
+ > defineObjects
+<portlet:defineObjects/>
+<table>
+	<tr>
+		<td>renderRequest</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>renderResponse</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>portletConfig</td>
+		<td></td>
+	</tr>
+</table>
+
+** Jetspeed startup **
+org.apache.jetspeed.engine.JetspeedServlet.init(ServletConfig)
+    public final void init( ServletConfig config ) throws ServletException{
+        synchronized (this.getClass()){
+
+                ServletContext context = config.getServletContext();
+
+                String propertiesFilename = ServletHelper.findInitParameter(context, config, JETSPEED_PROPERTIES_KEY,
+                        JETSPEED_PROPERTIES_DEFAULT);
+
+                String applicationRoot = ServletHelper.findInitParameter(context, config, APPLICATION_ROOT_KEY,
+                        APPLICATION_ROOT_DEFAULT);
+
+                webappRoot = config.getServletContext().getRealPath("/");
+
+                if (applicationRoot == null || applicationRoot.equals(WEB_CONTEXT)){
+                    applicationRoot = webappRoot;
+                }
+
+                applicationRoot = applicationRoot.replace('\\', '/');
+                
+                PropertiesConfiguration properties = new PropertiesConfiguration();
+                File propsFile = new File(ServletHelper.getRealPath(config, propertiesFilename));
+                if (!propsFile.isFile()){
+                    throw new IOException("Jetspeed properties not found: "+propsFile.getAbsolutePath());
+                }
+                File jetspeedPropertiesPath = propsFile.getParentFile();
+                properties.load(propsFile);
+                propsFile = new File(jetspeedPropertiesPath,OVERRIDE_PROPERTIES);
+                if (propsFile.exists()){
+                    PropertiesConfiguration extraProps = new PropertiesConfiguration();
+                    extraProps.load(propsFile);
+                    ConfigurationUtils.copy(extraProps,properties);
+                }
+                propsFile = new File(jetspeedPropertiesPath,SPRING_FILTER_KEY_PROPERTIES);
+                if (propsFile.exists()){
+                    PropertiesConfiguration extraProps = new PropertiesConfiguration();
+                    extraProps.load(propsFile);
+                    Object springFilterKey = extraProps.getProperty(SPRING_FILTER_KEY);
+                    if (springFilterKey != null){
+                        properties.setProperty(SPRING_FILTER_KEY, springFilterKey);
+                    }
+                }
+                properties.setProperty(APPLICATION_ROOT_KEY, applicationRoot);
+                properties.setProperty(WEBAPP_ROOT_KEY, webappRoot);
+                properties.setProperty(JETSPEED_PROPERTIES_PATH_KEY, jetspeedPropertiesPath.getAbsolutePath());
+
+                engine = new JetspeedEngine(properties, applicationRoot, config, initializeComponentManager(config, applicationRoot, properties));
+                Jetspeed.setEngine(engine);
+                engine.start();                
+                contextComponent = (RequestContextComponent) Jetspeed.getComponentManager().getComponent(RequestContextComponent.class);
+        }
+    }
+org.apache.jetspeed.engine.JetspeedServlet.init(HttpServletRequest, HttpServletResponse)
+    public final void init( HttpServletRequest request, HttpServletResponse response )
+    {
+        synchronized (JetspeedServlet.class)
+        {
+            if (firstDoGet)
+            {
+                // initialize the Portal context path
+                engine.getContext().setContextPath(request.getContextPath());
+                // Mark that we're done.
+                firstDoGet = false;
+            }
+        }
+    }
+    
+org.apache.jetspeed.engine.JetspeedServlet.initializeComponentManager(ServletConfig, String, Configuration)
+    protected ComponentManager initializeComponentManager(ServletConfig servletConfig, String appRoot, Configuration configuration) throws IOException {
+        ServletConfigFactoryBean.setServletConfig(servletConfig);
+        final String assemblyDir = configuration.getString("assembly.dir","/WEB-INF/assembly");
+        final String assemblyFileExtension = configuration.getString("assembly.extension",".xml");
+        String springFilterKey = configuration.getString(SPRING_FILTER_KEY, SPRING_FILTER_KEY_DEFAULT);
+        File springFilterProperties = new File(configuration.getString(JETSPEED_PROPERTIES_PATH_KEY), SPRING_FILTER_PROPERTIES);
+        if (!springFilterProperties.isFile()){
+            throw new IOException("Spring filter properties not found: "+springFilterProperties.getAbsolutePath());
+        }
+        String[] bootConfigs = new String[] {"/WEB-INF/assembly/boot/*.xml"};
+        String[] appConfigs =  new String[] {assemblyDir+"/*"+assemblyFileExtension, assemblyDir+"/override/*"+assemblyFileExtension};
+        ServletContext servletContext = servletConfig.getServletContext();
+        JetspeedBeanDefinitionFilter filter = new JetspeedBeanDefinitionFilter("file:"+springFilterProperties.getAbsolutePath(), springFilterKey);
+        Properties initProperties = new Properties();
+        initProperties.put(JETSPEED_PROPERTIES_PATH_KEY, configuration.getString(JETSPEED_PROPERTIES_PATH_KEY));
+        SpringComponentManager cm = new SpringComponentManager(filter, bootConfigs, appConfigs, servletContext, appRoot, initProperties);      
+        
+        return cm;        
+    }    
+org.apache.jetspeed.components.SpringComponentManager.SpringComponentManager(JetspeedBeanDefinitionFilter, String[], String[], ServletContext, String, Properties)
+    public SpringComponentManager(JetspeedBeanDefinitionFilter filter, String[] bootConfigs, String[] appConfigs, ServletContext servletContext,
+            String appRoot, Properties initProperties){
+
+        appRoot = appRoot.replace('\\', '/');
+        
+        if (initProperties == null){
+            initProperties = new Properties();
+        }
+        initProperties.setProperty(JetspeedEngineConstants.APPLICATION_ROOT_KEY, appRoot);
+        if (!initProperties.containsKey(JetspeedEngineConstants.JETSPEED_PROPERTIES_PATH_KEY)){
+            initProperties.put(JetspeedEngineConstants.JETSPEED_PROPERTIES_PATH_KEY, appRoot+JetspeedEngineConstants.JETSPEED_PROPERTIES_PATH_DEFAULT);
+        }
+        
+        if (bootConfigs != null && bootConfigs.length > 0){
+            bootCtx = new FilteringXmlWebApplicationContext(filter, bootConfigs, initProperties, servletContext);
+        }
+        else{
+            bootCtx = new FileSystemXmlApplicationContext();
+        }
+        appContext = new FilteringXmlWebApplicationContext(filter, appConfigs, initProperties, servletContext, bootCtx);
+
+        factories = new ArrayList();
+        factories.add(appContext);
+
+        servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, appContext);
+    }
+org.apache.jetspeed.components.FilteringXmlWebApplicationContext.FilteringXmlWebApplicationContext(JetspeedBeanDefinitionFilter, String[], Properties, ServletContext, ApplicationContext)
+    public FilteringXmlWebApplicationContext(JetspeedBeanDefinitionFilter filter, String[] configLocations, Properties initProperties, ServletContext servletContext, ApplicationContext parent)
+    {
+        super();
+        if (parent != null){
+            this.setParent(parent);
+        }
+        if (initProperties != null){
+            PropertyPlaceholderConfigurer ppc = new PropertyPlaceholderConfigurer();
+            ppc.setIgnoreUnresolvablePlaceholders(true);
+            ppc.setSystemPropertiesMode(PropertyPlaceholderConfigurer.SYSTEM_PROPERTIES_MODE_FALLBACK);
+            ppc.setProperties(initProperties);
+            addBeanFactoryPostProcessor(ppc);
+        }
+        setConfigLocations(configLocations);
+        setServletContext(servletContext);
+        this.filter = filter;
+    }    
+    
+    
